@@ -1,0 +1,14 @@
+server:
+  port: 8003
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 111
+    url: jdbc:mysql://localhost:3306/cloud-study
+  application:
+    name: goods
+  cloud:
+    nacos:
+      server-addr: localhost:8848

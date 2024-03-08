@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8000
 spring:
   application:
     name: gateway
@@ -12,5 +12,20 @@ spring:
           uri: lb://oneApp
           predicates:
             - Path=/one
+
+        - id: account
+          uri: lb://account
+          predicates:
+            - Path=/account/**
+
+        - id: goods
+          uri: lb://goods
+          predicates:
+            - Path=/goods/**
+
+        - id: order
+          uri: lb://order
+          predicates:
+            - Path=/order/**
   main:
     web-application-type: reactive
