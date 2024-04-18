@@ -26,8 +26,8 @@ public class LoginC {
         String token = JWT.create()
                 .setPayload("username", act.getUsername())
                 .setPayload("password", act.getPassword())
-                // 设置过期时间为1分钟
-                .setExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60))
+                // 设置过期时间为10分钟
+                .setExpiresAt(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 31))
                 .setKey("123".getBytes())
                 .sign();
         map.put("token", token);
