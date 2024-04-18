@@ -1,6 +1,5 @@
 package com.demo.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("order")
-public class Order {
+public class CsOrder {
     private Long id;
     private Long goodsId;
 }

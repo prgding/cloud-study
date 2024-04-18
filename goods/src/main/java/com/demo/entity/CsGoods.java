@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Goods {
+public class CsGoods {
     private Long id;
     private String goodsName;
 }

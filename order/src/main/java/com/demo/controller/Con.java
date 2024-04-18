@@ -1,7 +1,8 @@
 package com.demo.controller;
 
-import com.demo.entity.Order;
+import com.demo.entity.CsOrder;
 import com.demo.m.M;
+import com.demo.utils.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("order")
 public class Con {
     private final M mapper;
 
-    @RequestMapping("/queryOrder")
+    @RequestMapping("queryOrder")
     public String queryOrder() {
-        Order order = mapper.selectById(1);
-        return order.toString();
+        System.out.println("OrderUserInfo = " + UserContext.getUserInfo());
+        CsOrder csOrder = mapper.selectById(1);
+        return csOrder.toString() + UserContext.getUserInfo();
     }
-
 }
