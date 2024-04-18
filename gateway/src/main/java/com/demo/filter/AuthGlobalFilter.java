@@ -4,10 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTValidator;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.demo.entity.R;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -27,23 +29,24 @@ import java.util.List;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        System.out.println("filter executed");
+        log.info("filter executed");
         // 1.获取Request
         ServerHttpRequest request = exchange.getRequest();
         // 2.判断是否不需要拦截
-        System.out.println("request.getPath() = " + request.getPath());
+        log.info("request.getPath() = {}", request.getPath());
         if (request.getPath().toString().equals("/account/login")) {
             // 无需拦截，直接放行
-            System.out.println("无需拦截，直接放行");
+            log.info("无需拦截，直接放行");
             return chain.filter(exchange);
         }
         // 3.获取请求头中的token
         String token = null;
         HttpHeaders headers = request.getHeaders();
-        System.out.println(headers);
+        log.info("headers = {}", headers);
         List<String> tokenHeaders = headers.get("token");
         if (!CollUtil.isEmpty(tokenHeaders)) {
             token = tokenHeaders.get(0);
@@ -60,9 +63,13 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return response.writeWith(Mono.just(response.bufferFactory().wrap(rJson.getBytes())));
         }
 
-        System.out.println("jwt: " + JWT.of(token).getPayload());
+        JWTPayload tokenInfo = JWT.of(token).getPayload();
+        log.info("jwt = {}", tokenInfo);
         // 6.放行
-        return chain.filter(exchange);
+        ServerWebExchange webExchange = exchange.mutate()
+                .request(req -> req.header("user-info", tokenInfo.toString()))
+                .build();
+        return chain.filter(webExchange);
     }
 
     @Override
